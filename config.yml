@@ -3,3 +3,6 @@ logging:
   level: INFO
   loggers:
     com.mhova: DEBUG
+
+jobs:
+	scrapeJob: 10m

@@ -1,8 +1,13 @@
 package com.mhova.kindleScraper;
 
+import java.util.List;
+
+import com.mhova.kindleScraper.jobs.ScrapeJob;
+
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
+import io.dropwizard.jobs.JobsBundle;
 
 public class KindleScraperApplication extends Application<KindleScraperConfiguration> {
 
@@ -17,7 +22,7 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 	@Override
 	public void initialize(final Bootstrap<KindleScraperConfiguration> bootstrap) {
-		// TODO: application initialization
+		bootstrap.addBundle(new JobsBundle(List.of(new ScrapeJob())));
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.mhova.kindleScraper;
 
-import io.dropwizard.core.Configuration;
+import io.dropwizard.jobs.JobConfiguration;
 
-public class KindleScraperConfiguration extends Configuration {
+public class KindleScraperConfiguration extends JobConfiguration {
 	// TODO: implement service configuration
 }
