@@ -8,13 +8,13 @@ import io.dropwizard.jobs.JobConfiguration;
 
 public class KindleScraperConfiguration extends JobConfiguration {
 	@JsonProperty("jobs")
-	private Map<String , String> jobs;
+	private Map<String, String> jobs;
 
 	public Map<String, String> getJobs() {
-	    return jobs;
+		return jobs;
 	}
 
 	public void setJobs(Map<String, String> jobs) {
-	    this.jobs = jobs;
+		this.jobs = jobs;
 	}
 }
