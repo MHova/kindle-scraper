@@ -5,4 +5,4 @@ logging:
     com.mhova: DEBUG
 
 jobs:
-	scrapeJob: 10m
+  scrapeJob: 10m
