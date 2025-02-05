@@ -11,8 +11,7 @@ public class ScrapeJob extends Job {
 
 	@Override
 	public void doJob(JobExecutionContext context) throws JobExecutionException {
-		// TODO Auto-generated method stub
-
+		System.out.println("hello world");
 	}
 
 }
