@@ -2,11 +2,14 @@ package com.mhova.kindleScraper;
 
 import java.util.List;
 
+import org.jdbi.v3.core.Jdbi;
+
 import com.mhova.kindleScraper.jobs.ScrapeJob;
 
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
+import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.jobs.JobsBundle;
 
 public class KindleScraperApplication extends Application<KindleScraperConfiguration> {
@@ -27,7 +30,8 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 	@Override
 	public void run(final KindleScraperConfiguration configuration, final Environment environment) {
-		// TODO: implement application
+		final JdbiFactory factory = new JdbiFactory();
+		final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
 	}
 
 }

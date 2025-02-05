@@ -4,7 +4,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jobs.JobConfiguration;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public class KindleScraperConfiguration extends JobConfiguration {
 	@JsonProperty("jobs")
@@ -16,5 +19,19 @@ public class KindleScraperConfiguration extends JobConfiguration {
 
 	public void setJobs(Map<String, String> jobs) {
 		this.jobs = jobs;
+	}
+
+	@Valid
+	@NotNull
+	private DataSourceFactory database = new DataSourceFactory();
+
+	@JsonProperty("database")
+	public void setDataSourceFactory(DataSourceFactory factory) {
+		this.database = factory;
+	}
+
+	@JsonProperty("database")
+	public DataSourceFactory getDataSourceFactory() {
+		return database;
 	}
 }
