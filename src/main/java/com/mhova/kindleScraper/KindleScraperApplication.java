@@ -25,13 +25,14 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 	@Override
 	public void initialize(final Bootstrap<KindleScraperConfiguration> bootstrap) {
-		bootstrap.addBundle(new JobsBundle(List.of(new ScrapeJob())));
 	}
 
 	@Override
-	public void run(final KindleScraperConfiguration configuration, final Environment environment) {
+	public void run(final KindleScraperConfiguration configuration, final Environment environment) throws Exception {
 		final JdbiFactory factory = new JdbiFactory();
 		final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
+		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(jdbi)));
+		jobsBundle.run(configuration, environment);
 	}
 
 }
