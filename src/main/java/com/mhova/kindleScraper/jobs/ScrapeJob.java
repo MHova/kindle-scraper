@@ -56,7 +56,8 @@ public class ScrapeJob extends Job {
 			dao.insert(Instant.now(), newPrice);
 
 			if (maybePreviousPrice.isPresent() && newPrice < maybePreviousPrice.get()) {
-				LOGGER.info("Kindle price dropped! Sending notification.");
+				LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification."
+						.formatted(maybePreviousPrice.get(), newPrice));
 				notifier.notify(maybePreviousPrice.get(), newPrice);
 
 			}
