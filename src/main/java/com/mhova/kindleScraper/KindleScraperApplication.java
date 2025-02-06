@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jdbi.v3.core.Jdbi;
 
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.mhova.kindleScraper.db.PricesDAO;
 import com.mhova.kindleScraper.jobs.ScrapeJob;
 
@@ -26,6 +27,7 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 	@Override
 	public void initialize(final Bootstrap<KindleScraperConfiguration> bootstrap) {
+		bootstrap.getObjectMapper().registerModule(new ParameterNamesModule());
 	}
 
 	@Override

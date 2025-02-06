@@ -34,4 +34,17 @@ public class KindleScraperConfiguration extends JobConfiguration {
 	public DataSourceFactory getDataSourceFactory() {
 		return database;
 	}
+
+	@Valid
+	@NotNull
+	@JsonProperty("email")
+	private EmailConfiguration emailConfig;
+
+	public EmailConfiguration getEmailConfig() {
+		return emailConfig;
+	}
+
+	public void setEmailConfig(EmailConfiguration emailConfig) {
+		this.emailConfig = emailConfig;
+	}
 }
