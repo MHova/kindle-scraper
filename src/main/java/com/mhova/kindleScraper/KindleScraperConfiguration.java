@@ -37,14 +37,14 @@ public class KindleScraperConfiguration extends JobConfiguration {
 
 	@Valid
 	@NotNull
-	@JsonProperty("email")
-	private EmailConfiguration emailConfig;
+	@JsonProperty("notification")
+	private NotificationConfiguration notificationConfig;
 
-	public EmailConfiguration getEmailConfig() {
-		return emailConfig;
+	public NotificationConfiguration getNotificationConfig() {
+		return notificationConfig;
 	}
 
-	public void setEmailConfig(EmailConfiguration emailConfig) {
-		this.emailConfig = emailConfig;
+	public void setNotificationConfig(NotificationConfiguration notificationConfig) {
+		this.notificationConfig = notificationConfig;
 	}
 }

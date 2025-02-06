@@ -23,7 +23,8 @@ database:
   evictionInterval: 10s
   minIdleTime: 1 minute
 
-email:
+notification:
+  type: logging
   user:
   password:
   recipient:
