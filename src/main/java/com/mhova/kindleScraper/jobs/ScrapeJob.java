@@ -1,12 +1,10 @@
 package com.mhova.kindleScraper.jobs;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 
 import org.jdbi.v3.core.Jdbi;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.quartz.JobExecutionContext;
@@ -14,6 +12,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mhova.kindleScraper.core.DocumentProvider;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
 import com.mhova.kindleScraper.db.PricesDAO;
 
@@ -25,20 +24,20 @@ public class ScrapeJob extends Job {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ScrapeJob.class);
 	private final Jdbi jdbi;
 	private final PriceDropNotifier notifier;
+	private final DocumentProvider documentProvider;
 
-	public ScrapeJob(final Jdbi jdbi, final PriceDropNotifier notifier) {
+	public ScrapeJob(final Jdbi jdbi, final PriceDropNotifier notifier, final DocumentProvider documentProvider) {
 		this.jdbi = jdbi;
 		this.notifier = notifier;
+		this.documentProvider = documentProvider;
 	}
 
 	@Override
 	public void doJob(final JobExecutionContext context) throws JobExecutionException {
-		final File html = new File("src/main/resources/kindle.htm");
-
 		Document document = null;
 
 		try {
-			document = Jsoup.parse(html);
+			document = documentProvider.getDocument();
 		} catch (final IOException e) {
 			LOGGER.error(e.getMessage());
 		}

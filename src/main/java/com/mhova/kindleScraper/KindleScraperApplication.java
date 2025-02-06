@@ -5,8 +5,10 @@ import java.util.List;
 import org.jdbi.v3.core.Jdbi;
 
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.mhova.kindleScraper.core.DocumentProvider;
 import com.mhova.kindleScraper.core.EmailNotifier;
 import com.mhova.kindleScraper.core.EmailSender;
+import com.mhova.kindleScraper.core.FileDocumentProvider;
 import com.mhova.kindleScraper.core.LoggingNotifier;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
 import com.mhova.kindleScraper.db.PricesDAO;
@@ -45,9 +47,14 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 					case LoggingConfiguration _lc -> new LoggingNotifier();
 		};
 
+		final DocumentProvider documentProvider =
+			switch (configuration.getDocumentConfig()) {
+				case FileDocumentConfiguration fdc -> new FileDocumentProvider(fdc.fileLocation());
+		};
+
 		jdbi.onDemand(PricesDAO.class).createPricesTable();
 
-		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(jdbi, notifier)));
+		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(jdbi, notifier, documentProvider)));
 		jobsBundle.run(configuration, environment);
 	}
 

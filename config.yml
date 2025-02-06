@@ -30,3 +30,7 @@ notification:
   recipient:
   smtpHost: smtp.gmail.com
   smtpPort: 587
+
+document:
+  type: file
+  fileLocation: src/main/resources/kindle.htm
