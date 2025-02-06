@@ -29,14 +29,14 @@ public class EmailSender {
 
 	public void sendEmail(final String subject, final String body) {
 		final Properties props = new Properties();
-		props.put("mail.smtp.host", emailConfig.smtpHost);
-		props.put("mail.smtp.port", emailConfig.smtpPort);
+		props.put("mail.smtp.host", emailConfig.smtpHost());
+		props.put("mail.smtp.port", emailConfig.smtpPort());
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
 
 		final Session session = Session.getInstance(props, new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(emailConfig.user, emailConfig.password);
+				return new PasswordAuthentication(emailConfig.user(), emailConfig.password());
 			}
 		});
 
@@ -45,12 +45,12 @@ public class EmailSender {
 			msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
 			msg.addHeader("format", "flowed");
 			msg.addHeader("Content-Transfer-Encoding", "8bit");
-			msg.setFrom(new InternetAddress(emailConfig.user, "ECFX"));
-			msg.setReplyTo(InternetAddress.parse(emailConfig.user, false));
+			msg.setFrom(new InternetAddress(emailConfig.user(), "ECFX"));
+			msg.setReplyTo(InternetAddress.parse(emailConfig.user(), false));
 			msg.setSubject(subject, "UTF-8");
 			msg.setText(body, "UTF-8");
 			msg.setSentDate(new Date());
-			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailConfig.recipient, false));
+			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailConfig.recipient(), false));
 			Transport.send(msg);
 		} catch (final MessagingException e) {
 			LOGGER.error(e.getMessage());
