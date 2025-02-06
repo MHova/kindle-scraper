@@ -3,3 +3,22 @@ logging:
   level: INFO
   loggers:
     com.mhova: DEBUG
+
+jobs:
+  scrapeJob: 1s
+
+database:
+  driverClass: org.h2.Driver
+  user: root
+  password: root
+  url: jdbc:h2:mem:kindle-scraper
+  properties:
+    charSet: UTF-8
+  maxWaitForConnection: 1s
+  validationQuery: "/* MyApplication Health Check */ SELECT 1"
+  validationQueryTimeout: 3s
+  minSize: 8
+  maxSize: 30
+  checkConnectionWhileIdle: false
+  evictionInterval: 10s
+  minIdleTime: 1 minute
