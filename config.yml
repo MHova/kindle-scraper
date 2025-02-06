@@ -22,3 +22,11 @@ database:
   checkConnectionWhileIdle: false
   evictionInterval: 10s
   minIdleTime: 1 minute
+
+notification:
+  type: logging
+  user:
+  password:
+  recipient:
+  smtpHost: smtp.gmail.com
+  smtpPort: 587

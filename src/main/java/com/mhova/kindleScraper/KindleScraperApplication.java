@@ -4,6 +4,11 @@ import java.util.List;
 
 import org.jdbi.v3.core.Jdbi;
 
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.mhova.kindleScraper.core.EmailNotifier;
+import com.mhova.kindleScraper.core.EmailSender;
+import com.mhova.kindleScraper.core.LoggingNotifier;
+import com.mhova.kindleScraper.core.PriceDropNotifier;
 import com.mhova.kindleScraper.db.PricesDAO;
 import com.mhova.kindleScraper.jobs.ScrapeJob;
 
@@ -26,16 +31,23 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 	@Override
 	public void initialize(final Bootstrap<KindleScraperConfiguration> bootstrap) {
+		bootstrap.getObjectMapper().registerModule(new ParameterNamesModule());
 	}
 
 	@Override
 	public void run(final KindleScraperConfiguration configuration, final Environment environment) throws Exception {
 		final JdbiFactory factory = new JdbiFactory();
 		final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
-		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(jdbi)));
+
+		final PriceDropNotifier notifier =
+				switch (configuration.getNotificationConfig()) {
+					case EmailConfiguration ec -> new EmailNotifier(new EmailSender(ec));
+					case LoggingConfiguration _lc -> new LoggingNotifier();
+		};
 
 		jdbi.onDemand(PricesDAO.class).createPricesTable();
 
+		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(jdbi, notifier)));
 		jobsBundle.run(configuration, environment);
 	}
 

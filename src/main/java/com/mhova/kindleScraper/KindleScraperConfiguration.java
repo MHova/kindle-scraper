@@ -34,4 +34,17 @@ public class KindleScraperConfiguration extends JobConfiguration {
 	public DataSourceFactory getDataSourceFactory() {
 		return database;
 	}
+
+	@Valid
+	@NotNull
+	@JsonProperty("notification")
+	private NotificationConfiguration notificationConfig;
+
+	public NotificationConfiguration getNotificationConfig() {
+		return notificationConfig;
+	}
+
+	public void setNotificationConfig(NotificationConfiguration notificationConfig) {
+		this.notificationConfig = notificationConfig;
+	}
 }
