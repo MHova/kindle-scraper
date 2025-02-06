@@ -14,6 +14,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mhova.kindleScraper.core.EmailSender;
 import com.mhova.kindleScraper.db.PricesDAO;
 
 import io.dropwizard.jobs.Job;
@@ -23,9 +24,11 @@ import io.dropwizard.jobs.annotations.Every;
 public class ScrapeJob extends Job {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ScrapeJob.class);
 	private final Jdbi jdbi;
+	private final EmailSender emailSender;
 
-	public ScrapeJob(final Jdbi jdbi) {
+	public ScrapeJob(final Jdbi jdbi, final EmailSender emailSender) {
 		this.jdbi = jdbi;
+		this.emailSender = emailSender;
 	}
 
 	@Override
@@ -53,7 +56,9 @@ public class ScrapeJob extends Job {
 			dao.insert(Instant.now(), newPrice);
 
 			if (maybePreviousPrice.isPresent() && newPrice < maybePreviousPrice.get()) {
-				LOGGER.info("PRICE DROP!!!!");
+				LOGGER.info("Kindle price dropped! Sending notification.");
+				emailSender.sendEmail("Kindle Price Drop Alert",
+						"The Kindle was previously $%.2f, but is now $%.2f.".formatted(maybePreviousPrice.get(), newPrice));
 			}
 		}
 	}
