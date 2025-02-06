@@ -39,8 +39,7 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 	@Override
 	public void run(final KindleScraperConfiguration configuration, final Environment environment) throws Exception {
-		final JdbiFactory factory = new JdbiFactory();
-		final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
+		final Jdbi jdbi = new JdbiFactory().build(environment, configuration.getDataSourceFactory(), "h2");
 
 		final PriceDropNotifier notifier =
 			switch (configuration.getNotificationConfig()) {
@@ -54,9 +53,10 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 				case WebDocumentConfiguration wdc -> new WebDocumentProvider(wdc.url());
 		};
 
-		jdbi.onDemand(PricesDAO.class).createPricesTable();
+		final PricesDAO dao = jdbi.onDemand(PricesDAO.class);
+		dao.createPricesTable();
 
-		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(jdbi, notifier, documentProvider)));
+		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(dao, notifier, documentProvider)));
 		jobsBundle.run(configuration, environment);
 	}
 
