@@ -16,6 +16,8 @@ public class FileDocumentProvider implements DocumentProvider {
 
 	@Override
 	public Document getDocument() throws IOException {
+		// NB: purposefully rereading the document every time to allow one to modify the file on the fly
+		// while the server is running
 		return Jsoup.parse(new File(fileLocation));
 	}
 }
