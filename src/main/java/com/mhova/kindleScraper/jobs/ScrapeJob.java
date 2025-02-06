@@ -11,7 +11,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mhova.kindleScraper.core.DocumentProvider;
+import com.mhova.kindleScraper.DocumentProvider;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
 import com.mhova.kindleScraper.db.PricesDAO;
 

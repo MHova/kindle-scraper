@@ -51,13 +51,13 @@ public class KindleScraperConfiguration extends JobConfiguration {
 	@Valid
 	@NotNull
 	@JsonProperty("document")
-	private DocumentConfiguration documentConfig;
+	private DocumentProvider documentProvider;
 
-	public DocumentConfiguration getDocumentConfig() {
-		return documentConfig;
+	public DocumentProvider getDocumentProvider() {
+		return documentProvider;
 	}
 
-	public void setDocumentConfig(DocumentConfiguration documentConfig) {
-		this.documentConfig = documentConfig;
+	public void setDocumentProvider(DocumentProvider documentProvider) {
+		this.documentProvider = documentProvider;
 	}
 }
