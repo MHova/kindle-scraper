@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jdbi.v3.core.Jdbi;
 
+import com.mhova.kindleScraper.db.PricesDAO;
 import com.mhova.kindleScraper.jobs.ScrapeJob;
 
 import io.dropwizard.core.Application;
@@ -32,6 +33,9 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 		final JdbiFactory factory = new JdbiFactory();
 		final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
 		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(jdbi)));
+
+		jdbi.onDemand(PricesDAO.class).createPricesTable();
+
 		jobsBundle.run(configuration, environment);
 	}
 
