@@ -11,6 +11,7 @@ import com.mhova.kindleScraper.core.EmailSender;
 import com.mhova.kindleScraper.core.FileDocumentProvider;
 import com.mhova.kindleScraper.core.LoggingNotifier;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
+import com.mhova.kindleScraper.core.WebDocumentProvider;
 import com.mhova.kindleScraper.db.PricesDAO;
 import com.mhova.kindleScraper.jobs.ScrapeJob;
 
@@ -50,6 +51,7 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 		final DocumentProvider documentProvider =
 			switch (configuration.getDocumentConfig()) {
 				case FileDocumentConfiguration fdc -> new FileDocumentProvider(fdc.fileLocation());
+				case WebDocumentConfiguration wdc -> new WebDocumentProvider(wdc.url());
 		};
 
 		jdbi.onDemand(PricesDAO.class).createPricesTable();
