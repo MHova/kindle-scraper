@@ -5,7 +5,7 @@ logging:
     com.mhova: DEBUG
 
 jobs:
-  scrapeJob: 1s
+  scrapeJob: 10s
 
 database:
   driverClass: org.h2.Driver
@@ -30,3 +30,8 @@ notification:
   recipient:
   smtpHost: smtp.gmail.com
   smtpPort: 587
+
+document:
+  type: web
+  fileLocation: src/main/resources/kindle.htm
+  url: https://www.amazon.com/Amazon_Fire_HD_10/dp/B0BHZT5S12

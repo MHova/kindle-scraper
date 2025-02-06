@@ -26,3 +26,17 @@ Email notifications:
 - `notification.recipient`: the email address to which the notifications should be sent
 - `notification.smtpHost`: The SMTP host address. Defaults to `smtp.gmail.com`
 - `notification.smtpPort`: The SMTP port. Defaults to `587`
+
+Document Source Configuration
+---
+Switch between parsing a local html file and scraping from the real web by modifying the following fields in `config.yml`:
+
+Local file parsing:
+- `document.type`: set to `file`
+- `document.fileLocation`: set to location of the local file to parse. A sample html file is included at `src/main/resources/kindle.htm`.
+
+Real web scraping:
+- `document.type`: set to `web`
+- `document.url`: set to the web URL to scrape. Defaults to `https://www.amazon.com/Amazon_Fire_HD_10/dp/B0BHZT5S12`
+
+Be sure to also set the scraping frequency at `jobs.scrapeJob`. I have been using `1s` for local file parsing and `10s` for real web scraping.

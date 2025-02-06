@@ -47,4 +47,17 @@ public class KindleScraperConfiguration extends JobConfiguration {
 	public void setNotificationConfig(NotificationConfiguration notificationConfig) {
 		this.notificationConfig = notificationConfig;
 	}
+
+	@Valid
+	@NotNull
+	@JsonProperty("document")
+	private DocumentProvider documentProvider;
+
+	public DocumentProvider getDocumentProvider() {
+		return documentProvider;
+	}
+
+	public void setDocumentProvider(DocumentProvider documentProvider) {
+		this.documentProvider = documentProvider;
+	}
 }
