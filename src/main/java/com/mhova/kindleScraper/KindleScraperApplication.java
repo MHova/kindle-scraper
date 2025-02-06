@@ -3,6 +3,8 @@ package com.mhova.kindleScraper;
 import java.util.List;
 
 import org.jdbi.v3.core.Jdbi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.mhova.kindleScraper.core.EmailNotifier;
@@ -19,7 +21,8 @@ import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.jobs.JobsBundle;
 
 public class KindleScraperApplication extends Application<KindleScraperConfiguration> {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(KindleScraperApplication.class);
+	
 	public static void main(final String[] args) throws Exception {
 		new KindleScraperApplication().run(args);
 	}
@@ -37,13 +40,16 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 	@Override
 	public void run(final KindleScraperConfiguration configuration, final Environment environment) throws Exception {
 		final Jdbi jdbi = new JdbiFactory().build(environment, configuration.getDataSourceFactory(), "h2");
-
+		
 		final PriceDropNotifier notifier =
 			switch (configuration.getNotificationConfig()) {
 				case EmailConfiguration ec -> new EmailNotifier(new EmailSender(ec));
 				case LoggingConfiguration _lc -> new LoggingNotifier();
 		};
 
+		LOGGER.info("Document source: %s".formatted(configuration.getDocumentProvider().getClass().toString()));
+		LOGGER.info("Notification medium: %s".formatted(notifier.getClass().toString()));
+		
 		final PricesDAO dao = jdbi.onDemand(PricesDAO.class);
 		dao.createPricesTable();
 
