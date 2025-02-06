@@ -42,9 +42,9 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 		final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
 
 		final PriceDropNotifier notifier =
-				switch (configuration.getNotificationConfig()) {
-					case EmailConfiguration ec -> new EmailNotifier(new EmailSender(ec));
-					case LoggingConfiguration _lc -> new LoggingNotifier();
+			switch (configuration.getNotificationConfig()) {
+				case EmailConfiguration ec -> new EmailNotifier(new EmailSender(ec));
+				case LoggingConfiguration _lc -> new LoggingNotifier();
 		};
 
 		final DocumentProvider documentProvider =
