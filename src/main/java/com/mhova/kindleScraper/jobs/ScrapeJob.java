@@ -56,9 +56,7 @@ public class ScrapeJob extends Job {
 				LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification."
 						.formatted(maybePreviousPrice.get(), newPrice));
 				notifier.notify(maybePreviousPrice.get(), newPrice);
-
 			}
 		}
 	}
-
 }

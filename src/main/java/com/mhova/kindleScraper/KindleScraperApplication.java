@@ -57,5 +57,4 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 			List.of(new ScrapeJob(dao, notifier, configuration.getDocumentProvider())));
 		jobsBundle.run(configuration, environment);
 	}
-
 }
