@@ -33,30 +33,28 @@ public class ScrapeJob extends Job {
 
 	@Override
 	public void doJob(final JobExecutionContext context) throws JobExecutionException {
-		Document document = null;
+		final Document document;
 
 		try {
 			document = documentProvider.getDocument();
 		} catch (final IOException e) {
-			LOGGER.error(e.getMessage());
+			throw new JobExecutionException(e);
 		}
 
-		if (document != null) {
-			final Element priceDisplayDiv = document.selectFirst("div[data-feature-name='corePriceDisplay_desktop']");
-			final String wholeDollarAndDecimalPoint = priceDisplayDiv.selectFirst("span.a-price-whole").text();
-			final String cents = priceDisplayDiv.selectFirst("span.a-price-fraction").text();
+		final Element priceDisplayDiv = document.selectFirst("div[data-feature-name='corePriceDisplay_desktop']");
+		final String wholeDollarAndDecimalPoint = priceDisplayDiv.selectFirst("span.a-price-whole").text();
+		final String cents = priceDisplayDiv.selectFirst("span.a-price-fraction").text();
 
-			final Double newPrice = Double.parseDouble(wholeDollarAndDecimalPoint + cents);
-			LOGGER.info("Kindle price is now " + newPrice);
+		final Double newPrice = Double.parseDouble(wholeDollarAndDecimalPoint + cents);
+		LOGGER.info("Kindle price is now " + newPrice);
 
-			final Optional<Double> maybePreviousPrice = Optional.ofNullable(dao.findLatestPrice());
-			dao.insert(Instant.now(), newPrice);
+		final Optional<Double> maybePreviousPrice = Optional.ofNullable(dao.findLatestPrice());
+		dao.insert(Instant.now(), newPrice);
 
-			if (maybePreviousPrice.isPresent() && newPrice < maybePreviousPrice.get()) {
-				LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification."
-						.formatted(maybePreviousPrice.get(), newPrice));
-				notifier.notify(maybePreviousPrice.get(), newPrice);
-			}
+		if (maybePreviousPrice.isPresent() && newPrice < maybePreviousPrice.get()) {
+			LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification."
+					.formatted(maybePreviousPrice.get(), newPrice));
+			notifier.notify(maybePreviousPrice.get(), newPrice);
 		}
 	}
 }
