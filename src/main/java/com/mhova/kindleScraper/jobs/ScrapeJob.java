@@ -41,6 +41,20 @@ public class ScrapeJob extends Job {
 			throw new JobExecutionException(e);
 		}
 
+		// @formatter:off
+		/*
+		 * The pertinent parts of the html look something like this:
+		 *
+		 * <div ... data-feature-name="corePriceDisplay_desktop" ...>
+		 * ...
+		 * <span class="a-price-symbol">$</span>
+		 * <span class="a-price-whole">94
+		 * <span class="a-price-decimal">.</span></span>
+		 * <span class="a-price-fraction">99</span>
+		 * ...
+		 * </div>
+		 */
+		// @formatter:on
 		final Element priceDisplayDiv = document.selectFirst("div[data-feature-name='corePriceDisplay_desktop']");
 		final String wholeDollarAndDecimalPoint = priceDisplayDiv.selectFirst("span.a-price-whole").text();
 		final String cents = priceDisplayDiv.selectFirst("span.a-price-fraction").text();
@@ -48,6 +62,8 @@ public class ScrapeJob extends Job {
 		final Double newPrice = Double.parseDouble(wholeDollarAndDecimalPoint + cents);
 		LOGGER.info("Kindle price is now " + newPrice);
 
+		// if this is the very first run of the job, then there is no previous price in
+		// the DB
 		final Optional<Double> maybePreviousPrice = Optional.ofNullable(dao.findLatestPrice());
 		dao.insert(Instant.now(), newPrice);
 
