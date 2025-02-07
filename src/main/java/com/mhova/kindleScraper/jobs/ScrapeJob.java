@@ -67,10 +67,10 @@ public class ScrapeJob extends Job {
 		final Optional<Double> maybePreviousPrice = Optional.ofNullable(dao.findLatestPrice());
 		dao.insert(Instant.now(), newPrice);
 
-		if (maybePreviousPrice.isPresent() && newPrice < maybePreviousPrice.get()) {
-			LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification."
-					.formatted(maybePreviousPrice.get(), newPrice));
-			notifier.notify(maybePreviousPrice.get(), newPrice);
-		}
+		maybePreviousPrice.ifPresent(previousPrice -> {
+			LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification.".formatted(previousPrice,
+					newPrice));
+			notifier.notify(previousPrice, newPrice);
+		});
 	}
 }
