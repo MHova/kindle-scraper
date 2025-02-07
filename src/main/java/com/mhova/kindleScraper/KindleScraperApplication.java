@@ -22,7 +22,7 @@ import io.dropwizard.jobs.JobsBundle;
 
 public class KindleScraperApplication extends Application<KindleScraperConfiguration> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KindleScraperApplication.class);
-	
+
 	public static void main(final String[] args) throws Exception {
 		new KindleScraperApplication().run(args);
 	}
@@ -40,21 +40,24 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 	@Override
 	public void run(final KindleScraperConfiguration configuration, final Environment environment) throws Exception {
 		final Jdbi jdbi = new JdbiFactory().build(environment, configuration.getDataSourceFactory(), "h2");
-		
+
+		// @formatter:off
 		final PriceDropNotifier notifier =
 			switch (configuration.getNotificationConfig()) {
 				case EmailConfiguration ec -> new EmailNotifier(new EmailSender(ec));
 				case LoggingConfiguration _lc -> new LoggingNotifier();
 		};
+		// @formatter:on
 
+		// log this info for sanity checking
 		LOGGER.info("Document source: %s".formatted(configuration.getDocumentProvider().getClass().toString()));
 		LOGGER.info("Notification medium: %s".formatted(notifier.getClass().toString()));
-		
+
 		final PricesDAO dao = jdbi.onDemand(PricesDAO.class);
 		dao.createPricesTable();
 
 		final JobsBundle jobsBundle = new JobsBundle(
-			List.of(new ScrapeJob(dao, notifier, configuration.getDocumentProvider())));
+				List.of(new ScrapeJob(dao, notifier, configuration.getDocumentProvider())));
 		jobsBundle.run(configuration, environment);
 	}
 }
