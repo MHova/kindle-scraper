@@ -6,6 +6,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.infobip.jackson.InfobipJacksonModule;
 import com.mhova.kindleScraper.core.EmailNotifier;
 import com.mhova.kindleScraper.core.EmailSender;
 import com.mhova.kindleScraper.core.LoggingNotifier;
@@ -33,6 +34,7 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 	@Override
 	public void initialize(final Bootstrap<KindleScraperConfiguration> bootstrap) {
+		bootstrap.getObjectMapper().registerModule(new InfobipJacksonModule());
 	}
 
 	@Override
