@@ -12,6 +12,7 @@ import com.mhova.kindleScraper.core.LoggingNotifier;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
 import com.mhova.kindleScraper.db.PricesDAO;
 import com.mhova.kindleScraper.email.EmailSender;
+import com.mhova.kindleScraper.email.Session;
 import com.mhova.kindleScraper.email.Transport;
 import com.mhova.kindleScraper.jobs.ScrapeJob;
 
@@ -45,7 +46,8 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 		// @formatter:off
 		final PriceDropNotifier notifier =
 			switch (configuration.getNotificationConfig()) {
-				case EmailConfiguration ec -> new EmailNotifier(new EmailSender(ec, new Transport()));
+				case EmailConfiguration ec ->
+					new EmailNotifier(new EmailSender(ec, new Transport(), new Session()));
 				case LoggingConfiguration _lc -> new LoggingNotifier();
 		};
 		// @formatter:on

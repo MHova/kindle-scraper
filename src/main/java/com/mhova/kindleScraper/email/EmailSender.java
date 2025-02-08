@@ -8,7 +8,6 @@ import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -22,10 +21,12 @@ public class EmailSender {
 
 	private final EmailConfiguration emailConfig;
 	private final Transport transport;
+	private final Session session;
 
-	public EmailSender(final EmailConfiguration emailConfig, final Transport transport) {
+	public EmailSender(final EmailConfiguration emailConfig, final Transport transport, final Session session) {
 		this.emailConfig = emailConfig;
 		this.transport = transport;
+		this.session = session;
 	}
 
 	public void sendEmail(final String subject, final String body) {
@@ -35,7 +36,7 @@ public class EmailSender {
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
 
-		final Session session = Session.getInstance(props, new Authenticator() {
+		final javax.mail.Session session = this.session.getInstance(props, new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(emailConfig.user(), emailConfig.password());
 			}
