@@ -4,10 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -38,11 +36,7 @@ public class EmailSender {
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
 
-		final Session session = sessionProxy.getInstance(props, new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(emailConfig.user(), emailConfig.password());
-			}
-		});
+		final Session session = sessionProxy.getInstance(props, emailConfig.user(), emailConfig.password());
 
 		try {
 			final MimeMessage msg = new MimeMessage(session);
