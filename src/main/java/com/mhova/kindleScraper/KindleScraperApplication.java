@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import com.infobip.jackson.InfobipJacksonModule;
 import com.mhova.kindleScraper.core.EmailNotifier;
-import com.mhova.kindleScraper.core.EmailSender;
 import com.mhova.kindleScraper.core.LoggingNotifier;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
-import com.mhova.kindleScraper.core.Transport;
 import com.mhova.kindleScraper.db.PricesDAO;
+import com.mhova.kindleScraper.email.EmailSender;
+import com.mhova.kindleScraper.email.Transport;
 import com.mhova.kindleScraper.jobs.ScrapeJob;
 
 import io.dropwizard.core.Application;

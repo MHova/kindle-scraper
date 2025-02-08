@@ -1,5 +1,7 @@
 package com.mhova.kindleScraper.core;
 
+import com.mhova.kindleScraper.email.EmailSender;
+
 public class EmailNotifier implements PriceDropNotifier {
 	private final EmailSender emailSender;
 

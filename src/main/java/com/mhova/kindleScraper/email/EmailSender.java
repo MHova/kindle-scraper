@@ -1,4 +1,4 @@
-package com.mhova.kindleScraper.core;
+package com.mhova.kindleScraper.email;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
