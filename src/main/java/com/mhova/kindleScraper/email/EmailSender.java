@@ -8,6 +8,7 @@ import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -20,13 +21,14 @@ public class EmailSender {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailSender.class);
 
 	private final EmailConfiguration emailConfig;
-	private final Transport transport;
-	private final Session session;
+	private final TransportProxy transportProxy;
+	private final SessionProxy sessionProxy;
 
-	public EmailSender(final EmailConfiguration emailConfig, final Transport transport, final Session session) {
+	public EmailSender(final EmailConfiguration emailConfig, final TransportProxy transportProxy,
+			final SessionProxy sessionProxy) {
 		this.emailConfig = emailConfig;
-		this.transport = transport;
-		this.session = session;
+		this.transportProxy = transportProxy;
+		this.sessionProxy = sessionProxy;
 	}
 
 	public void sendEmail(final String subject, final String body) {
@@ -36,7 +38,7 @@ public class EmailSender {
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
 
-		final javax.mail.Session session = this.session.getInstance(props, new Authenticator() {
+		final Session session = sessionProxy.getInstance(props, new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(emailConfig.user(), emailConfig.password());
 			}
@@ -53,7 +55,7 @@ public class EmailSender {
 			msg.setText(body, "UTF-8");
 			msg.setSentDate(new Date());
 			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailConfig.recipient(), false));
-			transport.send(msg);
+			transportProxy.send(msg);
 		} catch (final MessagingException e) {
 			LOGGER.error(e.getMessage());
 		} catch (final UnsupportedEncodingException e) {

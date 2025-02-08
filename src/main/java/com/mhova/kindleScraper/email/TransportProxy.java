@@ -1,10 +1,11 @@
 package com.mhova.kindleScraper.email;
 
 import javax.mail.MessagingException;
+import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 
-public class Transport {
+public class TransportProxy {
 	public void send(final MimeMessage msg) throws MessagingException {
-		javax.mail.Transport.send(msg);
+		Transport.send(msg);
 	}
 }
