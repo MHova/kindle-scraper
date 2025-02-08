@@ -9,7 +9,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -22,9 +21,11 @@ public class EmailSender {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailSender.class);
 
 	private final EmailConfiguration emailConfig;
+	private final Transport transport;
 
-	public EmailSender(final EmailConfiguration emailConfig) {
+	public EmailSender(final EmailConfiguration emailConfig, final Transport transport) {
 		this.emailConfig = emailConfig;
+		this.transport = transport;
 	}
 
 	public void sendEmail(final String subject, final String body) {
@@ -51,7 +52,7 @@ public class EmailSender {
 			msg.setText(body, "UTF-8");
 			msg.setSentDate(new Date());
 			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailConfig.recipient(), false));
-			Transport.send(msg);
+			transport.send(msg);
 		} catch (final MessagingException e) {
 			LOGGER.error(e.getMessage());
 		} catch (final UnsupportedEncodingException e) {
