@@ -10,7 +10,7 @@ import com.infobip.jackson.InfobipJacksonModule;
 import com.mhova.kindleScraper.core.EmailNotifier;
 import com.mhova.kindleScraper.core.LoggingNotifier;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
-import com.mhova.kindleScraper.db.PricesDAO;
+import com.mhova.kindleScraper.db.PriceCheckDAO;
 import com.mhova.kindleScraper.email.EmailSender;
 import com.mhova.kindleScraper.email.SessionProxy;
 import com.mhova.kindleScraper.email.TransportProxy;
@@ -56,8 +56,8 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 		LOGGER.info("Document source: %s".formatted(configuration.getDocumentProvider().getClass().toString()));
 		LOGGER.info("Notification medium: %s".formatted(notifier.getType()));
 
-		final PricesDAO dao = jdbi.onDemand(PricesDAO.class);
-		dao.createPricesTable();
+		final PriceCheckDAO dao = jdbi.onDemand(PriceCheckDAO.class);
+		dao.createPriceChecksTable();
 
 		final JobsBundle jobsBundle = new JobsBundle(
 				List.of(new ScrapeJob(dao, notifier, configuration.getDocumentProvider())));

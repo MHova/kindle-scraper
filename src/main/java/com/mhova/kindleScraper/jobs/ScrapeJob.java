@@ -13,7 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import com.mhova.kindleScraper.DocumentProvider;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
-import com.mhova.kindleScraper.db.PricesDAO;
+import com.mhova.kindleScraper.db.PriceCheck;
+import com.mhova.kindleScraper.db.PriceCheckDAO;
 
 import io.dropwizard.jobs.Job;
 import io.dropwizard.jobs.annotations.Every;
@@ -21,11 +22,11 @@ import io.dropwizard.jobs.annotations.Every;
 @Every
 public class ScrapeJob extends Job {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ScrapeJob.class);
-	private final PricesDAO dao;
+	private final PriceCheckDAO dao;
 	private final PriceDropNotifier notifier;
 	private final DocumentProvider documentProvider;
 
-	public ScrapeJob(final PricesDAO dao, final PriceDropNotifier notifier, final DocumentProvider documentProvider) {
+	public ScrapeJob(final PriceCheckDAO dao, final PriceDropNotifier notifier, final DocumentProvider documentProvider) {
 		this.dao = dao;
 		this.notifier = notifier;
 		this.documentProvider = documentProvider;
@@ -64,14 +65,14 @@ public class ScrapeJob extends Job {
 
 		// if this is the very first run of the job, then there is no previous price in
 		// the DB
-		final Optional<Double> maybePreviousPrice = Optional.ofNullable(dao.findLatestPrice());
-		dao.insert(Instant.now(), newPrice);
+		final Optional<PriceCheck> maybePreviousPriceCheck = Optional.ofNullable(dao.findLatestPriceCheck());
+		dao.insert(new PriceCheck(Instant.now(), newPrice));
 
-		maybePreviousPrice.ifPresent(previousPrice -> {
-			if (newPrice < previousPrice) {
+		maybePreviousPriceCheck.ifPresent(previousPriceCheck -> {
+			if (newPrice < previousPriceCheck.price()) {
 				LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification via %s."
-						.formatted(previousPrice, newPrice, notifier.getType()));
-				notifier.notify(previousPrice, newPrice);
+						.formatted(previousPriceCheck.price(), newPrice, notifier.getType()));
+				notifier.notify(previousPriceCheck.price(), newPrice);
 			}
 		});
 	}
