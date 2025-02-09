@@ -2,7 +2,12 @@
 logging:
   level: INFO
   loggers:
-    com.mhova: DEBUG
+    "com.mhova":
+      level: DEBUG
+      appenders:
+        - type: file
+          currentLogFilename: logfile.log
+          archive: false
 
 jobs:
   scrapeJob: 1s
