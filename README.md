@@ -41,6 +41,10 @@ Real web scraping:
 
 Be sure to also set the scraping frequency at `jobs.scrapeJob`. I have been using `1s` for local file parsing and `10s` for real web scraping. See the `@Every` section of the `dropwizard-jobs` [documentation](https://github.com/dropwizard-jobs/dropwizard-jobs?tab=readme-ov-file#available-job-types) for  the list of all supported time units.
 
+Minimum Price Decrease
+---
+Set the `minimumPriceDecrease` config field to change by how much the price needs to drop before we send a notification. Defaults to `0.01`.
+
 Logging
 ---
 `Dropwizard` logs are sent to console while application logs are sent to both console and `logfile.log`.

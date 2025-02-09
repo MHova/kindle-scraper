@@ -62,4 +62,17 @@ public class KindleScraperConfiguration extends JobConfiguration {
 	public void setDocumentProvider(DocumentProvider documentProvider) {
 		this.documentProvider = documentProvider;
 	}
+
+	@Valid
+	@NotNull
+	@JsonProperty("minimumPriceDecrease")
+	private double minimumPriceDecrease;
+
+	public double getMinimumPriceDecrease() {
+		return minimumPriceDecrease;
+	}
+
+	public void setMinimumPriceDecrease(double minimumPriceDecrease) {
+		this.minimumPriceDecrease = minimumPriceDecrease;
+	}
 }

@@ -59,8 +59,8 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 		final PriceCheckDAO dao = jdbi.onDemand(PriceCheckDAO.class);
 		dao.createPriceChecksTable();
 
-		final JobsBundle jobsBundle = new JobsBundle(
-				List.of(new ScrapeJob(dao, notifier, configuration.getDocumentProvider())));
+		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(dao, notifier,
+				configuration.getDocumentProvider(), configuration.getMinimumPriceDecrease())));
 		jobsBundle.run(configuration, environment);
 	}
 }

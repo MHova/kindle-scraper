@@ -25,12 +25,14 @@ public class ScrapeJob extends Job {
 	private final PriceCheckDAO dao;
 	private final PriceDropNotifier notifier;
 	private final DocumentProvider documentProvider;
+	private final double minimumPriceDecrease;
 
 	public ScrapeJob(final PriceCheckDAO dao, final PriceDropNotifier notifier,
-			final DocumentProvider documentProvider) {
+			final DocumentProvider documentProvider, final double minimumPriceDecrease) {
 		this.dao = dao;
 		this.notifier = notifier;
 		this.documentProvider = documentProvider;
+		this.minimumPriceDecrease = minimumPriceDecrease;
 	}
 
 	@Override
@@ -71,7 +73,7 @@ public class ScrapeJob extends Job {
 		dao.insert(new PriceCheck(now, newPrice));
 
 		maybePreviousPriceCheck.ifPresent(previousPriceCheck -> {
-			if (newPrice < previousPriceCheck.price()) {
+			if (newPrice + minimumPriceDecrease <= previousPriceCheck.price()) {
 				LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification via %s."
 						.formatted(previousPriceCheck.price(), newPrice, notifier.getType()));
 				notifier.notify(previousPriceCheck.timestamp(), previousPriceCheck.price(), now, newPrice);

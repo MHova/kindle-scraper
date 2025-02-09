@@ -40,3 +40,5 @@ document:
   type: file
   fileLocation: src/main/resources/kindle.htm
   url: https://www.amazon.com/Amazon_Fire_HD_10/dp/B0BHZT5S12
+
+minimumPriceDecrease: 0.01

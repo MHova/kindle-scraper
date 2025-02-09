@@ -42,7 +42,7 @@ class ScrapeJobTest {
 
 	@BeforeEach
 	void setup() {
-		this.scrapeJob = new ScrapeJob(dao, notifier, documentProvider);
+		this.scrapeJob = new ScrapeJob(dao, notifier, documentProvider, 0.01);
 	}
 
 	@Test
@@ -74,6 +74,35 @@ class ScrapeJobTest {
 	@Test
 	void doesNotNotifyIfPreviousPriceWasTheSame() throws JobExecutionException {
 		when(dao.findLatestPriceCheck()).thenReturn(new PriceCheck(Instant.now(), 94.99));
+
+		scrapeJob.doJob(null);
+
+		verify(notifier, never()).notify(any(Instant.class), anyDouble(), any(Instant.class), anyDouble());
+	}
+
+	@Test
+	void doesNotNotifyIfPreviousPriceIsWithinDelta() throws JobExecutionException {
+		scrapeJob = new ScrapeJob(dao, notifier, documentProvider, 0.02);
+
+		when(dao.findLatestPriceCheck()).thenReturn(new PriceCheck(Instant.now(), 95.0));
+
+		scrapeJob.doJob(null);
+
+		verify(notifier, never()).notify(any(Instant.class), anyDouble(), any(Instant.class), anyDouble());
+	}
+
+	@Test
+	void notifiesWhenPriceDropsMoreThanDelta() throws JobExecutionException {
+		when(dao.findLatestPriceCheck()).thenReturn(new PriceCheck(Instant.now(), 95.01));
+
+		scrapeJob.doJob(null);
+
+		verify(notifier).notify(any(Instant.class), eq(95.01), any(Instant.class), eq(94.99));
+	}
+
+	@Test
+	void doesNotNotifyIfPreviousPriceWasLower() throws JobExecutionException {
+		when(dao.findLatestPriceCheck()).thenReturn(new PriceCheck(Instant.now(), 94.98));
 
 		scrapeJob.doJob(null);
 
