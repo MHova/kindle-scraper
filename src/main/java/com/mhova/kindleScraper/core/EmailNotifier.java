@@ -1,5 +1,8 @@
 package com.mhova.kindleScraper.core;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+
 import com.mhova.kindleScraper.email.EmailSender;
 
 public class EmailNotifier implements PriceDropNotifier {
@@ -11,9 +14,12 @@ public class EmailNotifier implements PriceDropNotifier {
 	}
 
 	@Override
-	public void notify(double previousPrice, double currentPrice) {
+	public void notify(final Instant previousTimestamp, final double previousPrice, final Instant currentTimestamp,
+			final double currentPrice) {
 		emailSender.sendEmail("Kindle Price Drop Alert",
-				"The Kindle was previously $%.2f, but is now $%.2f.".formatted(previousPrice, currentPrice));
+				"The Kindle was previously $%.2f at %s, but has dropped to $%.2f at %s.".formatted(previousPrice,
+						DateTimeFormatter.ISO_INSTANT.format(previousTimestamp), currentPrice,
+						DateTimeFormatter.ISO_INSTANT.format(currentTimestamp)));
 	}
 
 	@Override

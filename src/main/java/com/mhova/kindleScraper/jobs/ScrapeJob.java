@@ -26,7 +26,8 @@ public class ScrapeJob extends Job {
 	private final PriceDropNotifier notifier;
 	private final DocumentProvider documentProvider;
 
-	public ScrapeJob(final PriceCheckDAO dao, final PriceDropNotifier notifier, final DocumentProvider documentProvider) {
+	public ScrapeJob(final PriceCheckDAO dao, final PriceDropNotifier notifier,
+			final DocumentProvider documentProvider) {
 		this.dao = dao;
 		this.notifier = notifier;
 		this.documentProvider = documentProvider;
@@ -66,13 +67,14 @@ public class ScrapeJob extends Job {
 		// if this is the very first run of the job, then there is no previous price in
 		// the DB
 		final Optional<PriceCheck> maybePreviousPriceCheck = Optional.ofNullable(dao.findLatestPriceCheck());
-		dao.insert(new PriceCheck(Instant.now(), newPrice));
+		final Instant now = Instant.now();
+		dao.insert(new PriceCheck(now, newPrice));
 
 		maybePreviousPriceCheck.ifPresent(previousPriceCheck -> {
 			if (newPrice < previousPriceCheck.price()) {
 				LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification via %s."
 						.formatted(previousPriceCheck.price(), newPrice, notifier.getType()));
-				notifier.notify(previousPriceCheck.price(), newPrice);
+				notifier.notify(previousPriceCheck.timestamp(), previousPriceCheck.price(), now, newPrice);
 			}
 		});
 	}
