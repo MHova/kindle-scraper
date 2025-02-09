@@ -13,6 +13,6 @@ public interface PriceCheckDAO {
 	void insert(@BindMethods PriceCheck priceCheck);
 
 	@RegisterConstructorMapper(PriceCheck.class)
-	@SqlQuery("select timestamp, price from price_checks order by id desc limit 1")
+	@SqlQuery("select timestamp, price from price_checks order by id desc")
 	PriceCheck findLatestPriceCheck();
 }
