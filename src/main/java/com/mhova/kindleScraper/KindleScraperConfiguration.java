@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public class KindleScraperConfiguration extends JobConfiguration {
+	@Valid
+	@NotNull
 	@JsonProperty("jobs")
 	private Map<String, String> jobs;
 
