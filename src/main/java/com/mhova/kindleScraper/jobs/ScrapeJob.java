@@ -68,9 +68,11 @@ public class ScrapeJob extends Job {
 		dao.insert(Instant.now(), newPrice);
 
 		maybePreviousPrice.ifPresent(previousPrice -> {
-			LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification.".formatted(previousPrice,
-					newPrice));
-			notifier.notify(previousPrice, newPrice);
+			if(newPrice < previousPrice) {
+				LOGGER.info("Kindle price dropped from $%.2f to $%.2f! Sending notification.".formatted(previousPrice,
+						newPrice));
+				notifier.notify(previousPrice, newPrice);
+			}
 		});
 	}
 }
