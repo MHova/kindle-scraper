@@ -54,7 +54,7 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 		// log this info for sanity checking
 		LOGGER.info("Document source: %s".formatted(configuration.getDocumentProvider().getClass().toString()));
-		LOGGER.info("Notification medium: %s".formatted(notifier.getClass().toString()));
+		LOGGER.info("Notification medium: %s".formatted(notifier.getType()));
 
 		final PricesDAO dao = jdbi.onDemand(PricesDAO.class);
 		dao.createPricesTable();

@@ -11,4 +11,9 @@ public class LoggingNotifier implements PriceDropNotifier {
 		LOGGER.info("Kindle Price Drop Alert! The Kindle was previously $%.2f, but is now $%.2f."
 				.formatted(previousPrice, currentPrice));
 	}
+
+	@Override
+	public String getType() {
+		return "logging";
+	}
 }

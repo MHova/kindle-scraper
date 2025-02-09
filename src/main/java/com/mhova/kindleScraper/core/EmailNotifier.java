@@ -15,4 +15,9 @@ public class EmailNotifier implements PriceDropNotifier {
 		emailSender.sendEmail("Kindle Price Drop Alert",
 				"The Kindle was previously $%.2f, but is now $%.2f.".formatted(previousPrice, currentPrice));
 	}
+
+	@Override
+	public String getType() {
+		return "email";
+	}
 }
