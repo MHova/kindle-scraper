@@ -39,4 +39,4 @@ Real web scraping:
 - `document.type`: set to `web`
 - `document.url`: set to the web URL to scrape. Defaults to `https://www.amazon.com/Amazon_Fire_HD_10/dp/B0BHZT5S12`
 
-Be sure to also set the scraping frequency at `jobs.scrapeJob`. I have been using `1s` for local file parsing and `10s` for real web scraping.
+Be sure to also set the scraping frequency at `jobs.scrapeJob`. I have been using `1s` for local file parsing and `10s` for real web scraping. See the `@Every` section of the `dropwizard-jobs` [documentation](https://github.com/dropwizard-jobs/dropwizard-jobs?tab=readme-ov-file#available-job-types) for  the list of all supported time units.
