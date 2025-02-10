@@ -27,8 +27,8 @@ public class ScrapeJob extends Job {
 	private final DocumentProvider documentProvider;
 	private final double minimumPriceDecrease;
 
-	public ScrapeJob(final PriceCheckDAO dao, final PriceDropNotifier notifier,
-			final DocumentProvider documentProvider, final double minimumPriceDecrease) {
+	public ScrapeJob(final PriceCheckDAO dao, final PriceDropNotifier notifier, final DocumentProvider documentProvider,
+			final double minimumPriceDecrease) {
 		this.dao = dao;
 		this.notifier = notifier;
 		this.documentProvider = documentProvider;
@@ -42,28 +42,48 @@ public class ScrapeJob extends Job {
 		try {
 			document = documentProvider.getDocument();
 		} catch (final IOException e) {
+			// If something goes wrong with retrieving the document (perhaps because the
+			// website is temporarily down), stop the current execution of the job, but try
+			// again later as per the specified schedule. However...(continued in try/catch
+			// below)
+			LOGGER.error(e.getMessage());
 			throw new JobExecutionException(e);
 		}
 
-		// @formatter:off
-		/*
-		 * The pertinent parts of the html look something like this:
-		 *
-		 * <div ... data-feature-name="corePriceDisplay_desktop" ...>
-		 * ...
-		 * <span class="a-price-symbol">$</span>
-		 * <span class="a-price-whole">94
-		 * <span class="a-price-decimal">.</span></span>
-		 * <span class="a-price-fraction">99</span>
-		 * ...
-		 * </div>
-		 */
-		// @formatter:on
-		final Element priceDisplayDiv = document.selectFirst("div[data-feature-name='corePriceDisplay_desktop']");
-		final String wholeDollarAndDecimalPoint = priceDisplayDiv.selectFirst("span.a-price-whole").text();
-		final String cents = priceDisplayDiv.selectFirst("span.a-price-fraction").text();
+		Double newPrice;
 
-		final Double newPrice = Double.parseDouble(wholeDollarAndDecimalPoint + cents);
+		try {
+			// @formatter:off
+			/*
+			 * The pertinent parts of the html look something like this:
+			 *
+			 * <div ... data-feature-name="corePriceDisplay_desktop" ...>
+			 * ...
+			 * <span class="a-price-symbol">$</span>
+			 * <span class="a-price-whole">94
+			 * <span class="a-price-decimal">.</span></span>
+			 * <span class="a-price-fraction">99</span>
+			 * ...
+			 * </div>
+			 */
+			// @formatter:on
+			final Element priceDisplayDiv = document.selectFirst("div[data-feature-name='corePriceDisplay_desktop']");
+			final String wholeDollarAndDecimalPoint = priceDisplayDiv.selectFirst("span.a-price-whole").text();
+			final String cents = priceDisplayDiv.selectFirst("span.a-price-fraction").text();
+
+			newPrice = Double.parseDouble(wholeDollarAndDecimalPoint + cents);
+		} catch (final Exception e) {
+			// ...if something went wrong while parsing the document, that probably means
+			// the structure of the website has changed or we got hit with a captcha. Either
+			// way, human intervention is needed to fix the problem. Stop pinging the
+			// website altogether by unscheduling this job.
+			final JobExecutionException jee = new JobExecutionException(e);
+			jee.setUnscheduleAllTriggers(true);
+			LOGGER.error("Error while parsing document. Unscheduling ScrapeJob.");
+			LOGGER.error(e.getMessage());
+			throw jee;
+		}
+
 		LOGGER.info("Kindle price is now " + newPrice);
 
 		// if this is the very first run of the job, then there is no previous price in
