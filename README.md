@@ -48,3 +48,7 @@ Set the `minimumPriceDecrease` config field to change by how much the price need
 Logging
 ---
 `Dropwizard` logs are sent to console while application logs are sent to both console and `logfile.log`.
+
+Health Checks
+---
+Service health checks are located at [http://localhost:8081/healthcheck](http://localhost:8081/healthcheck). Specifically, there is a `scrapeJob` health check that will fail if the scraping job is no longer running. This will likely be due to an error in html parsing caused by a change in the page structure or getting hit by a captcha.
