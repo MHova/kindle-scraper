@@ -36,7 +36,7 @@ public class ScrapeJob extends Job {
 	}
 
 	@Override
-	public void doJob(final JobExecutionContext context) throws JobExecutionException {
+	public void doJob(final JobExecutionContext _context) throws JobExecutionException {
 		final Document document;
 
 		try {
