@@ -2,10 +2,15 @@
 logging:
   level: INFO
   loggers:
-    com.mhova: DEBUG
+    "com.mhova":
+      level: DEBUG
+      appenders:
+        - type: file
+          currentLogFilename: logfile.log
+          archive: false
 
 jobs:
-  scrapeJob: 10s
+  scrapeJob: 1s
 
 database:
   driverClass: org.h2.Driver
@@ -32,6 +37,8 @@ notification:
   smtpPort: 587
 
 document:
-  type: web
+  type: file
   fileLocation: src/main/resources/kindle.htm
   url: https://www.amazon.com/Amazon_Fire_HD_10/dp/B0BHZT5S12
+
+minimumPriceDecrease: 0.01

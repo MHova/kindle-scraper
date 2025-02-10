@@ -1,15 +1,12 @@
-package com.mhova.kindleScraper.core;
+package com.mhova.kindleScraper.email;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -22,9 +19,14 @@ public class EmailSender {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailSender.class);
 
 	private final EmailConfiguration emailConfig;
+	private final TransportProxy transportProxy;
+	private final SessionProxy sessionProxy;
 
-	public EmailSender(final EmailConfiguration emailConfig) {
+	public EmailSender(final EmailConfiguration emailConfig, final TransportProxy transportProxy,
+			final SessionProxy sessionProxy) {
 		this.emailConfig = emailConfig;
+		this.transportProxy = transportProxy;
+		this.sessionProxy = sessionProxy;
 	}
 
 	public void sendEmail(final String subject, final String body) {
@@ -34,11 +36,7 @@ public class EmailSender {
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
 
-		final Session session = Session.getInstance(props, new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(emailConfig.user(), emailConfig.password());
-			}
-		});
+		final Session session = sessionProxy.getInstance(props, emailConfig.user(), emailConfig.password());
 
 		try {
 			final MimeMessage msg = new MimeMessage(session);
@@ -51,7 +49,7 @@ public class EmailSender {
 			msg.setText(body, "UTF-8");
 			msg.setSentDate(new Date());
 			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailConfig.recipient(), false));
-			Transport.send(msg);
+			transportProxy.send(msg);
 		} catch (final MessagingException e) {
 			LOGGER.error(e.getMessage());
 		} catch (final UnsupportedEncodingException e) {

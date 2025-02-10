@@ -6,14 +6,10 @@ import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public final class FileDocumentProvider implements DocumentProvider {
 	private final String fileLocation;
 
-	@JsonCreator
-	public FileDocumentProvider(@JsonProperty("fileLocation") final String fileLocation) {
+	public FileDocumentProvider(final String fileLocation) {
 		super();
 		this.fileLocation = fileLocation;
 	}

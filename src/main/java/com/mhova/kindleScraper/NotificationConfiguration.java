@@ -10,5 +10,4 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 	@JsonSubTypes.Type(value = EmailConfiguration.class, name = "email"),
 	@JsonSubTypes.Type(value = LoggingConfiguration.class, name = "logging") })
 public sealed interface NotificationConfiguration permits EmailConfiguration, LoggingConfiguration {
-
 }

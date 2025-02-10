@@ -39,4 +39,16 @@ Real web scraping:
 - `document.type`: set to `web`
 - `document.url`: set to the web URL to scrape. Defaults to `https://www.amazon.com/Amazon_Fire_HD_10/dp/B0BHZT5S12`
 
-Be sure to also set the scraping frequency at `jobs.scrapeJob`. I have been using `1s` for local file parsing and `10s` for real web scraping.
+Be sure to also set the scraping frequency at `jobs.scrapeJob`. I have been using `1s` for local file parsing and `10s` for real web scraping. See the `@Every` section of the `dropwizard-jobs` [documentation](https://github.com/dropwizard-jobs/dropwizard-jobs?tab=readme-ov-file#available-job-types) for  the list of all supported time units.
+
+Minimum Price Decrease
+---
+Set the `minimumPriceDecrease` config field to change by how much the price needs to drop before we send a notification. Defaults to `0.01`.
+
+Logging
+---
+`Dropwizard` logs are sent to console while application logs are sent to both console and `logfile.log`.
+
+Health Checks
+---
+Service health checks are located at [http://localhost:8081/healthcheck](http://localhost:8081/healthcheck). Specifically, there is a `scrapeJob` health check that will fail if the scraping job is no longer running. This will likely be due to an error in html parsing caused by a change in the page structure or getting hit by a captcha.
