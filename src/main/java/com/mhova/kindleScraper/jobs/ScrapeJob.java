@@ -86,8 +86,8 @@ public class ScrapeJob extends Job {
 
 		LOGGER.info("Kindle price is now " + newPrice);
 
-		// if this is the very first run of the job, then there is no previous price in
-		// the DB
+		// if this is the very first run of the job, then there will be no previous
+		// price in the DB
 		final Optional<PriceCheck> maybePreviousPriceCheck = Optional.ofNullable(dao.findLatestPriceCheck());
 		final Instant now = Instant.now();
 		dao.insert(new PriceCheck(now, newPrice));
