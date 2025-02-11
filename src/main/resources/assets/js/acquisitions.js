@@ -1,25 +1,29 @@
 (async function() {
-  const data = [
-    { year: 2010, count: 10 },
-    { year: 2011, count: 20 },
-    { year: 2012, count: 15 },
-    { year: 2013, count: 25 },
-    { year: 2014, count: 22 },
-    { year: 2015, count: 30 },
-    { year: 2016, count: 28 },
-  ];
   new Chart(
     document.getElementById('acquisitions'),
     {
-      type: 'bar',
+      type: 'line',
       data: {
-        labels: data.map(row => row.year),
+        labels: ["Hello", "World", "Goodbye"],
         datasets: [
           {
-            label: 'Acquisitions by year',
-            data: data.map(row => row.count)
+            label: 'Price over time',
+            data: [8, 9, 10],
+            borderColor: 'blue'
           }
         ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top'
+            },
+            title: {
+                display: true,
+                text: 'Amazon Fire HD 10 Tablet Price Over Time'
+            }
+        }
       }
     }
   );
