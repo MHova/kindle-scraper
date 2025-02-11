@@ -11,7 +11,7 @@ Maven is required to build this application.
 1. Run `mvn clean install` to build the application
 1. Start the application with `java -jar target/kindleScraper-1.0.0.jar server config.yml`
 
-See a visualization of the price check history at `http://localhost:8080/chart.html`
+See a visualization of the price check history at [http://localhost:8080/chart.html](http://localhost:8080/chart.html).
 
 Scraping will occur at regular intervals as soon as the application starts. Dropwizard and other framework logs are sent to console while application logs are sent to both console and `logfile.log`.
 
