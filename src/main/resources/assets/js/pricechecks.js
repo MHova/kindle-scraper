@@ -1,14 +1,21 @@
+const getThirtyFiveMostRecentPriceChecks = async () =>
+    await (await fetch('http://localhost:8080/api/pricechecks?limit=35')).json();
+
 (async function() {
+  const results = await getThirtyFiveMostRecentPriceChecks();
+  const labels = results.map(pc => pc.timestamp);
+  const data = results.map(pc => pc.price);
+
   new Chart(
     document.getElementById('pricechecks'),
     {
       type: 'line',
       data: {
-        labels: ["Hello", "World", "Goodbye"],
+        labels: labels,
         datasets: [
           {
             label: 'Price over time',
-            data: [8, 9, 10],
+            data: data,
             borderColor: 'blue'
           }
         ]
