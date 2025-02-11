@@ -1,6 +1,6 @@
 (async function() {
   new Chart(
-    document.getElementById('acquisitions'),
+    document.getElementById('pricechecks'),
     {
       type: 'line',
       data: {
