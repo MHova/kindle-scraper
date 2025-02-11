@@ -5,6 +5,8 @@ import org.jdbi.v3.sqlobject.customizer.BindMethods;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import com.mhova.kindleScraper.core.PriceCheck;
+
 public interface PriceCheckDAO {
 	// row id is DB-generated and monotonically increasing
 	@SqlUpdate("create table price_checks (id int GENERATED ALWAYS AS IDENTITY, timestamp timestamp with time zone, price numeric(10,2))")
