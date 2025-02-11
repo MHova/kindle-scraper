@@ -1,4 +1,4 @@
-package com.mhova.kindleScraper.db;
+package com.mhova.kindleScraper.core;
 
 import java.time.Instant;
 

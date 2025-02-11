@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mhova.kindleScraper.DocumentProvider;
+import com.mhova.kindleScraper.core.PriceCheck;
 import com.mhova.kindleScraper.core.PriceDropNotifier;
-import com.mhova.kindleScraper.db.PriceCheck;
 import com.mhova.kindleScraper.db.PriceCheckDAO;
 
 import io.dropwizard.jobs.Job;
