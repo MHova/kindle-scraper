@@ -11,6 +11,8 @@ Maven is required to build this application.
 1. Run `mvn clean install` to build the application
 1. Start the application with `java -jar target/kindleScraper-0.0.1-SNAPSHOT.jar server config.yml`
 
+See a visualization of the price check history at `http://localhost:8080/chart.html`
+
 Scraping will occur at regular intervals as soon as the application starts. Dropwizard and other framework logs are sent to console while application logs are sent to both console and `logfile.log`.
 
 By default, the application will do the following:
@@ -66,7 +68,7 @@ I chose [Dropwizard](https://www.dropwizard.io) as the skeleton for this applica
 
 Challenges
 ---
-The four biggest unknowns with this project were:
+The five biggest unknowns with this project were:
 ##### HTML parsing
 Can I decipher the giant 24k line HTML page and figure out the CSS selectors that are specific enough to pull out the price and exactly the price? It took fiddling with the browser element inspector tool and manually scrolling through the HTML a bunch to figure it out. The online HTML/CSS course I've been taking helped immensely with navigating the document and constructing the correct CSS selectors.
 
@@ -80,3 +82,6 @@ Can I figure out how to send emails programmatically through Gmail's SMTP server
 Will Amazon out me as a bot and hit me with a captcha once I start programmatically hitting their website? The general consensus online is that 5s is a reasonable interval for web scraping. I took a more conservative approach and only ever scraped at 10s intervals during development. Amazon did indeed intermittently hit me with captchas when I was sending random junk in the `user-agent` header. Once I found an acceptable `user-agent` string to send (thank you, once again, to the internet), Amazon never again hit me with a captcha. As a result, I did not even attempt to open the can of worms that is captcha-breaking.
 
 My solution to handling page structure changes or captchas is to simply fail fast as any fix would require human intervention anyway. The scraper job stops running and the application's health check will start failing in this case.
+
+##### Price check history visualization
+Can I figure out how to get Chart.js working to display a simple line graph of the price check history? The answer is yes, though with some difficulty in getting from zero to one. See the comments in this [commit](https://github.com/MHova/kindle-scraper/commit/67ae3450b18b97705d95470a14019447a1ee66b0).
