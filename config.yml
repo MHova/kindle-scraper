@@ -9,6 +9,9 @@ logging:
           currentLogFilename: logfile.log
           archive: false
 
+server:
+    rootPath: /api/*
+
 jobs:
   scrapeJob: 1s
 

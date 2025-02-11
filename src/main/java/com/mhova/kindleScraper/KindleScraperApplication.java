@@ -17,6 +17,7 @@ import com.mhova.kindleScraper.email.TransportProxy;
 import com.mhova.kindleScraper.health.ScrapeJobHealthCheck;
 import com.mhova.kindleScraper.jobs.ScrapeJob;
 
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
@@ -38,6 +39,7 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 	@Override
 	public void initialize(final Bootstrap<KindleScraperConfiguration> bootstrap) {
 		bootstrap.getObjectMapper().registerModule(new InfobipJacksonModule());
+		bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
 	}
 
 	@Override
