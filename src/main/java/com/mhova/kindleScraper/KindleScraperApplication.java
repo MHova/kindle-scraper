@@ -6,6 +6,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.infobip.jackson.InfobipJacksonModule;
 import com.mhova.kindleScraper.core.EmailNotifier;
 import com.mhova.kindleScraper.core.LoggingNotifier;
@@ -16,6 +17,7 @@ import com.mhova.kindleScraper.email.SessionProxy;
 import com.mhova.kindleScraper.email.TransportProxy;
 import com.mhova.kindleScraper.health.ScrapeJobHealthCheck;
 import com.mhova.kindleScraper.jobs.ScrapeJob;
+import com.mhova.kindleScraper.resources.PriceChecksResource;
 
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.core.Application;
@@ -39,6 +41,7 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 	@Override
 	public void initialize(final Bootstrap<KindleScraperConfiguration> bootstrap) {
 		bootstrap.getObjectMapper().registerModule(new InfobipJacksonModule());
+		bootstrap.getObjectMapper().disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
 	}
 
@@ -61,6 +64,8 @@ public class KindleScraperApplication extends Application<KindleScraperConfigura
 
 		final PriceCheckDAO dao = jdbi.onDemand(PriceCheckDAO.class);
 		dao.createPriceChecksTable();
+
+		environment.jersey().register(new PriceChecksResource(dao));
 
 		final JobsBundle jobsBundle = new JobsBundle(List.of(new ScrapeJob(dao, notifier,
 				configuration.getDocumentProvider(), configuration.getMinimumPriceDecrease())));
